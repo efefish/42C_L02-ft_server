@@ -1,1 +1,3 @@
-# 42C_L02-ft_server
+# 42Cursus project Level2 "ft_server"
+
+## Description
