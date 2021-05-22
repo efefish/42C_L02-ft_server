@@ -1,0 +1,31 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name _;
+    return 301 https://$host$request_uri;
+}
+
+server{
+    listen 443 ssl;
+  	listen [::]:443 ssl;
+ 
+	ssl on;
+    ssl_certificate /etc/nginx/ssl/example.crt;
+    ssl_certificate_key /etc/nginx/ssl/example.key;
+
+    root /var/www/html;
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    location / {
+			autoindex {{ var "AUTOINDEX" | default "on" }};			
+			try_files $uri $uri/ /index.php?$args;
+		}
+
+    location ~ \.php$ {
+		try_files $uri =404;
+		include /etc/nginx/fastcgi_params;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+		fastcgi_index index.php;
+	}
+}
